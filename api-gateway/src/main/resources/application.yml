@@ -21,8 +21,10 @@ zuul:
   routes:
     dummy-service: /dummy/**
     uaa-service:
+      sensitiveHeaders:
       path: /uaa/**
       stripPrefix: false
+  add-proxy-headers: true
 
 security:
   # Disable Spring Boot basic authentication

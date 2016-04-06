@@ -30,14 +30,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>javax.inject</groupId>
-                <artifactId>javax.inject</artifactId>
-                <version>1</version>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-parent</artifactId>
-                <version>Brixton.M3</version>
+                <version>Brixton.RC1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
