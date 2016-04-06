@@ -1,6 +1,5 @@
 <html>
 <head>
-    <link rel="stylesheet" href="../css/wro.css"/>
 </head>
 <body>
 <div class="container">
@@ -24,6 +23,5 @@
         <button class="btn btn-primary" type="submit">Deny</button>
     </form>
 </div>
-<script src="../js/wro.js" type="text/javascript"></script>
 </body>
 </html>
