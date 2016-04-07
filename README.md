@@ -10,6 +10,10 @@ This way to do may not work for all kind of configuration (I do not test without
 2. `AuthorizationServer` distribution for HA
 3. Do not expose `AuthorizationServer`, like other *service* `AuthorizationServer` will be behind `Zuul`
 
+![network](network.png)
+
+Where `localhost:8765` is `Zuul`, as you can see `AuthorizationServer` is not leaked outside! Only `Zuul` is targeted.
+
 **ATTENTION** for **2.** you should manage yourself shared storage backend (unlike following sample)! Using database or something els.
 
 ## Keys points of the sample
