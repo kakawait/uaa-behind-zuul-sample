@@ -21,7 +21,7 @@ eureka:
 # Define security
 security:
   basic:
-    enabled: true
+    enabled: false
   user:
     password: password
   ignored: /css/**,/js/**,/favicon.ico,/webjars/**
