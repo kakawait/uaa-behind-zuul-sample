@@ -21,9 +21,9 @@ zuul:
   routes:
     dummy-service: /dummy/**
     uaa-service:
-      sensitiveHeaders:
+      sensitive-headers:
       path: /uaa/**
-      stripPrefix: false
+      strip-prefix: false
   add-proxy-headers: true
 
 security:

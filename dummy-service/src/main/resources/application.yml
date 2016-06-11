@@ -28,3 +28,6 @@ security:
           -----END PUBLIC KEY-----
       id: openid
       serviceId: ${PREFIX:}resource
+
+logging:
+  level.org.springframework.security: DEBUG
