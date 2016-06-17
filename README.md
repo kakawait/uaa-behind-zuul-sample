@@ -1,5 +1,15 @@
 # UAA behind (load balanced) Edge service Zuul
 
+## Change Logs
+
+- Use fully qualified URL instead of relative URI to avoid HSTS redirection when using SSL.
+
+So instead of returning `/uaa/oauth/authorize` we are not returning full URL, we are calculating *base url* from
+`HttpServletRequest`
+
+- Upgrade to `spring-cloud:Brixton.RELEASE`
+- Upgrade to `spring-boot:1.3.5.RELEASE`
+
 Quick&dirty sample to expose how to configure `AuthorizationServer` (*UAA*) behind `Zuul`
 
 This way to do may not work for all kind of configuration (I do not test without `JWT` and `prefer-token-info: true`)

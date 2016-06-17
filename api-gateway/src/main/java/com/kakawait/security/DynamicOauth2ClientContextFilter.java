@@ -32,11 +32,17 @@ class DynamicOauth2ClientContextFilter extends OAuth2ClientContextFilter {
             builder.queryParam("state", e.getStateKey());
         }
 
-        this.redirectStrategy.sendRedirect(request, response, builder.build().encode().toUriString());
+        String url = getBaseUrl(request) + builder.build().encode().toUriString();
+        this.redirectStrategy.sendRedirect(request, response, url);
     }
 
     @Override
     public void setRedirectStrategy(RedirectStrategy redirectStrategy) {
         this.redirectStrategy = redirectStrategy;
+    }
+
+    private String getBaseUrl(HttpServletRequest request) {
+        StringBuffer url = request.getRequestURL();
+        return  url.substring(0, url.length() - request.getRequestURI().length() + request.getContextPath().length());
     }
 }
