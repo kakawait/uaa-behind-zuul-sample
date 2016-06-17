@@ -10,6 +10,8 @@ So instead of returning `/uaa/oauth/authorize` we are not returning full URL, we
 - Upgrade to `spring-cloud:Brixton.RELEASE`
 - Upgrade to `spring-boot:1.3.5.RELEASE`
 
+## Overview
+
 Quick&dirty sample to expose how to configure `AuthorizationServer` (*UAA*) behind `Zuul`
 
 This way to do may not work for all kind of configuration (I do not test without `JWT` and `prefer-token-info: true`)
