@@ -1,5 +1,9 @@
 # UAA behind (load balanced) Edge service Zuul
 
+## Disclamer
+
+**This project is *Proof of concept* (aka `PoC`)**, please before using in production review security concerns among other things. (See https://github.com/kakawait/uaa-behind-zuul-sample/issues/6)
+
 ## Change Logs
 
 - Use fully qualified URL instead of relative URI to avoid HSTS redirection when using SSL.
