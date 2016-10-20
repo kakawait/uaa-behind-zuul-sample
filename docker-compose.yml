@@ -1,0 +1,40 @@
+version: "2"
+services:
+  registry-service:
+    image: com.kakawait/service-registry
+    environment:
+      SERVICE_HOST: registry
+      SERVICE_PORT: 8761
+    ports:
+      - 8761:8761
+  uaa-service:
+    image: com.kakawait/uaa-service
+    environment:
+      SERVICE_PORT: 8769
+      REGISTRY_URL: http://registry-service:8761/eureka
+    ports:
+      - 8769:8769
+    links:
+      - registry-service:registry-service
+  gateway-service:
+    image: com.kakawait/api-gateway
+    environment:
+      SERVICE_PORT: 8765
+      REGISTRY_URL: http://registry-service:8761/eureka
+      UAA_SERVICE_URL: http://uaa-service:8761
+    ports:
+      - 8765:8765
+    links:
+      - registry-service:registry-service
+      - uaa-service:uaa-service
+  dummy-service:
+    image: com.kakawait/dummy-service
+    environment:
+      SERVICE_PORT: 8870
+      REGISTRY_URL: http://registry-service:8761/eureka
+    ports:
+      - 8870:8870
+    links:
+      - registry-service:registry-service
+      - uaa-service:uaa-service
+
