@@ -49,3 +49,18 @@ security:
 
 logging:
   level.org.springframework.security: DEBUG
+
+---
+
+spring:
+  profiles: docker
+
+server:
+  port: ${SERVICE_PORT}
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: ${REGISTRY_URL}
