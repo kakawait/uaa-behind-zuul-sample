@@ -1,4 +1,4 @@
-# UAA behind (load balanced) Edge service Zuul
+# UAA (`AuthorizationServer`) load balanced behind API-GATEWAY (Edge service `Zuul`)
 
 ## Disclamer
 
@@ -16,7 +16,7 @@ This way to do may not work for all kind of configuration (I do not test without
 
 ## Usage
 
-Please deploy every services using [*docker way*](#docker) or [*maven way*](#oldschool), then simply load `http://localhost:8765/dummy` on your favorite browser.
+Please deploy every services using [*docker way*](#docker) or [*maven way*](#maven), then simply load `http://localhost:8765/dummy` on your favorite browser.
 
 Default user/password is `user/password`
 
