@@ -39,7 +39,7 @@ docker-compose up -d
 On each service folder run following command:
 
 ```sh
-maven spring-boot:run
+mvn spring-boot:run
 ```
 
 ## Goals
