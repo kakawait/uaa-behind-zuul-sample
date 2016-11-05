@@ -7,7 +7,7 @@ server:
   port: 8769
   # Use different context-path to avoid session cookie overlapping
   context-path: /uaa
-  use-forward-headers: true
+  use-forward-headers: false
 
 # Define the Eureka server that handles service registration
 eureka:
@@ -31,7 +31,7 @@ logging:
 
 ---
 spring:
-  profiles: container
+  profiles: docker
 
 server:
   port: ${SERVICE_PORT}

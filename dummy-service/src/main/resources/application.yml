@@ -30,8 +30,9 @@ security:
       serviceId: ${PREFIX:}resource
 
 ---
+
 spring:
-  profiles: container
+  profiles: docker
 
 server:
   port: ${SERVICE_PORT}
