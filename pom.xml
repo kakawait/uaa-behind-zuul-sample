@@ -5,7 +5,7 @@
 
     <groupId>com.kakawait</groupId>
     <artifactId>uaa-behind-zuul</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <parent>
@@ -42,6 +42,11 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <inherited>false</inherited>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.1</version>

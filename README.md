@@ -4,21 +4,43 @@
 
 **This project is *Proof of concept* (aka `PoC`)**, please before using in production review security concerns among other things. (See https://github.com/kakawait/uaa-behind-zuul-sample/issues/6)
 
-## Change Logs
+## Change Log
 
-- Use fully qualified URL instead of relative URI to avoid HSTS redirection when using SSL.
-
-So instead of returning `/uaa/oauth/authorize` we are not returning full URL, we are calculating *base url* from
-`HttpServletRequest`
-
-- Upgrade to `spring-cloud:Brixton.RELEASE`
-- Upgrade to `spring-boot:1.3.5.RELEASE`
+see [CHANGELOG.md](CHANGELOG.md)
 
 ## Overview
 
 Quick&dirty sample to expose how to configure `AuthorizationServer` (*UAA*) behind `Zuul`
 
 This way to do may not work for all kind of configuration (I do not test without `JWT` and `prefer-token-info: true`)
+
+## Usage
+
+Please deploy every services using [*docker way*](#docker) or [*maven way*](#oldschool), then simply load `http://localhost:8765/dummy` on your favorite browser.
+
+Default user/password is `user/password`
+
+### Docker
+
+Start building docker images for every services, simply run following command on root directory
+
+```shell
+mvn clean package -Pdocker
+```
+
+Launch services using `docker-compose`
+
+```shell
+docker-compose up -d
+```
+
+### Maven
+
+On each service folder run following command:
+
+```sh
+maven spring-boot:run
+```
 
 ## Goals
 
@@ -52,29 +74,29 @@ Browser                             Zuul                               UAA
    │        /dummy                   │                                  │
    ├────────────────────────────────>│                                  │
    │  Location:http://ZUUL/login     │                                  │
-   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
+   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
    │        /login                   │                                  │
    ├────────────────────────────────>│                                  │
    │  Location:/uaa/oauth/authorize  │                                  │
-   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
+   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
    │     /uaa/oauth/authorize        │                                  │
    ├────────────────────────────────>│                                  │
    │                                 │      /uaa/oauth/authorize        │
-   │                                 ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│
+   │                                 ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│
    │                                 │                                  ├──┐
    │                                 │                                  │  │ Not authorize
    │                                 │                                  │<─┘
    │                                 │  Location:http://ZUUL/uaa/login  │
-   │                                 │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
+   │                                 │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
    │                                 │                                  │
    │ Location:http://ZUUL/uaa/login  │                                  │
-   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
+   │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤                                  │
    │       /uaa/login                │                                  │
    ├────────────────────────────────>│                                  │
    │                                 │            /uaa/login            │
-   │                                 ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│
+   │                                 ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄>│
    │                                 │           LOGIN FROM             │
-   │                                 │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
+   │                                 │<┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┤
    │           LOGIN FORM            │                                  │
    │<────────────────────────────────┤                                  │
 ```
