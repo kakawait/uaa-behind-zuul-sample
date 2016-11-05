@@ -30,8 +30,6 @@ services:
     environment:
       SERVICE_PORT: 8870
       REGISTRY_URL: http://service-registry:8761/eureka
-    ports:
-      - "8870:8870"
     links:
       - service-registry:service-registry
       - uaa-service:uaa-service
