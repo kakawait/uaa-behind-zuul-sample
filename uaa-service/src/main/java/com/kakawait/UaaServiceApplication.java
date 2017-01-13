@@ -1,6 +1,7 @@
 package com.kakawait;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.ManagementServerProperties;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,7 +22,6 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -49,8 +49,11 @@ public class UaaServiceApplication extends WebMvcConfigurerAdapter {
     @Configuration
     protected static class LoginConfiguration extends WebSecurityConfigurerAdapter {
 
-        @Autowired
-        private AuthenticationManager authenticationManager;
+        @Override
+        @Bean
+        public AuthenticationManager authenticationManagerBean() throws Exception {
+            return super.authenticationManagerBean();
+        }
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
@@ -60,7 +63,11 @@ public class UaaServiceApplication extends WebMvcConfigurerAdapter {
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-            auth.parentAuthenticationManager(authenticationManager);
+            auth
+              .inMemoryAuthentication()
+              .withUser("user").password("password").roles("USER")
+              .and()
+              .withUser("admin").password("admin").roles("ADMIN");
         }
     }
 
@@ -69,6 +76,7 @@ public class UaaServiceApplication extends WebMvcConfigurerAdapter {
     protected static class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
         @Autowired
+        @Qualifier("authenticationManagerBean")
         private AuthenticationManager authenticationManager;
 
         @Bean
