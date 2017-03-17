@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.0.4]
+
+### Changed
+
+- No more use _loopback trick_ and replace by _load balanced_ `RestTemplate` for `accessTokenUri` (#22)
+
 ## [0.0.3]
 
 ### Added
