@@ -34,7 +34,7 @@ security:
     sso:
       loginPath: /login
     client:
-      accessTokenUri: http://localhost:${server.port}/uaa/oauth/token
+      accessTokenUri: http://uaa-service/uaa/oauth/token
       userAuthorizationUri: /uaa/oauth/authorize
       clientId: acme
       clientSecret: acmesecret

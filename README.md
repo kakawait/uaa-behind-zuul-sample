@@ -2,7 +2,7 @@
 
 ## Disclamer
 
-**This project is *Proof of concept* (aka `PoC`)**, please before using in production review security concerns among other things. (See https://github.com/kakawait/uaa-behind-zuul-sample/issues/6)
+**This project is *Proof of concept* (aka `PoC`)** (and code quality is not perfect), please before using in production review security concerns among other things. (See https://github.com/kakawait/uaa-behind-zuul-sample/issues/6)
 
 ## Change Log
 
@@ -41,6 +41,13 @@ On each service folder run following command:
 ```sh
 mvn spring-boot:run
 ```
+
+## Run
+
+Open http://localhost:8765/dummy and connect with:
+
+- user: user
+- password: password
 
 ## Goals
 
@@ -106,11 +113,25 @@ Take attention on second redirection, location is using path (not at browser lev
 ### [`Zuul`] `localhost` trick for `security.oauth2.client.accessTokenUri`
 
 Unlike `security.oauth2.client.userAuthorizationUri`, `security.oauth2.client.accessTokenUri` is not used a browser level for redirection but used by `RestTemplate`.
-However `RestTemplate` does not support `path`, it must be an absolute url.
+However default `RestTemplate` used for `accessTokenUri` is not _load balanced_ thus we can't use url like http://service-name/oauth/token.
 
-So to fool the system I'm using loopback trick, by doing that `Zuul` will call itself and forward itself request to `AuthorizationServer`
+We can simply add _load balanced_ feature by adding such `Bean`
 
-**ATTENTION** this is a trick we must find something better (https://github.com/spring-projects/spring-security-oauth/issues/671)
+```java
+@Bean
+UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer(SpringClientFactory springClientFactory) {
+    return template -> {
+        AccessTokenProviderChain accessTokenProviderChain = Stream
+                .of(new AuthorizationCodeAccessTokenProvider(), new ImplicitAccessTokenProvider(),
+                        new ResourceOwnerPasswordAccessTokenProvider(), new ClientCredentialsAccessTokenProvider())
+                .peek(tp -> tp.setRequestFactory(new RibbonClientHttpRequestFactory(springClientFactory)))
+                .collect(Collectors.collectingAndThen(Collectors.toList(), AccessTokenProviderChain::new));
+        template.setAccessTokenProvider(accessTokenProviderChain);
+    };
+}
+```
+
+An opened isse exists https://github.com/spring-projects/spring-security-oauth/issues/671
 
 ### [`Zuul`] Clear `sensitiveHeaders` lists for `AuthorizationServer` route
 
@@ -124,7 +145,7 @@ By default it filters:
 
 But we need that `AuthorizationServer` could create cookies so we must clear list
 
-```
+```yml
 zuul:
   routes:
     uaa-service:
@@ -139,7 +160,7 @@ zuul:
 
 `AuthorizationServer` has it own `XSRF` protection so we must disable at `Zuul` level
 
-```
+```java
 private RequestMatcher csrfRequestMatcher() {
     return new RequestMatcher() {
         // Always allow the HTTP GET method
@@ -169,7 +190,7 @@ private RequestMatcher csrfRequestMatcher() {
 
 Ok should I really need to explain why?
 
-```
+```java
 http.authorizeRequests().antMatchers("/uaa/**", "/login").permitAll()
 ```
 
