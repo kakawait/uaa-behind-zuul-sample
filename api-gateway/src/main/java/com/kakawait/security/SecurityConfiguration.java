@@ -1,15 +1,20 @@
 package com.kakawait.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-import org.springframework.boot.autoconfigure.web.ServerPropertiesAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.client.filter.OAuth2ClientContextFilter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationManager;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationProcessingFilter;
+import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -24,7 +29,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -33,10 +37,14 @@ import java.util.regex.Pattern;
  */
 @Configuration
 @EnableOAuth2Sso
-@EnableWebSecurity
+@EnableResourceServer
+@Order(value = 0)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String CSRF_COOKIE_NAME = "XSRF-TOKEN";
     private static final String CSRF_HEADER_NAME = "X-XSRF-TOKEN";
+
+    @Autowired
+    private ResourceServerTokenServices resourceServerTokenServices;
 
     @Bean
     @Primary
@@ -51,8 +59,28 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf().requireCsrfProtectionMatcher(csrfRequestMatcher()).csrfTokenRepository(csrfTokenRepository())
             .and()
             .addFilterAfter(csrfHeaderFilter(), CsrfFilter.class)
+            .addFilterAfter(oAuth2AuthenticationProcessingFilter(), AbstractPreAuthenticatedProcessingFilter.class)
             .logout().permitAll()
             .logoutSuccessUrl("/");
+    }
+
+    private OAuth2AuthenticationProcessingFilter oAuth2AuthenticationProcessingFilter() {
+        OAuth2AuthenticationProcessingFilter oAuth2AuthenticationProcessingFilter =
+                new OAuth2AuthenticationProcessingFilter();
+        oAuth2AuthenticationProcessingFilter.setAuthenticationManager(oauthAuthenticationManager());
+        oAuth2AuthenticationProcessingFilter.setStateless(false);
+
+        return oAuth2AuthenticationProcessingFilter;
+    }
+
+
+    private AuthenticationManager oauthAuthenticationManager() {
+        OAuth2AuthenticationManager oAuth2AuthenticationManager = new OAuth2AuthenticationManager();
+        oAuth2AuthenticationManager.setResourceId("apigateway");
+        oAuth2AuthenticationManager.setTokenServices(resourceServerTokenServices);
+        oAuth2AuthenticationManager.setClientDetailsService(null);
+
+        return oAuth2AuthenticationManager;
     }
 
     private RequestMatcher csrfRequestMatcher() {
