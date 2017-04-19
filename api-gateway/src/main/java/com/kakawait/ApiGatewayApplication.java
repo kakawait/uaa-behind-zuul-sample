@@ -33,8 +33,11 @@ public class ApiGatewayApplication {
     UserInfoRestTemplateCustomizer userInfoRestTemplateCustomizer(SpringClientFactory springClientFactory) {
         return template -> {
             AccessTokenProviderChain accessTokenProviderChain = Stream
-                    .of(new AuthorizationCodeAccessTokenProvider(), new ImplicitAccessTokenProvider(),
-                            new ResourceOwnerPasswordAccessTokenProvider(), new ClientCredentialsAccessTokenProvider())
+                    .of(
+                            new AuthorizationCodeAccessTokenProvider(),
+                            new ImplicitAccessTokenProvider(),
+                            new ResourceOwnerPasswordAccessTokenProvider(),
+                            new ClientCredentialsAccessTokenProvider())
                     .peek(tp -> tp.setRequestFactory(new RibbonClientHttpRequestFactory(springClientFactory)))
                     .collect(Collectors.collectingAndThen(Collectors.toList(), AccessTokenProviderChain::new));
             template.setAccessTokenProvider(accessTokenProviderChain);
