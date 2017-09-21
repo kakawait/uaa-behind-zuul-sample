@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.kakawait</groupId>
         <artifactId>uaa-behind-zuul</artifactId>
-        <version>0.0.4-SNAPSHOT</version>
+        <version>0.0.5</version>
     </parent>
 
     <properties>
