@@ -32,7 +32,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Dalston.SR4</version>
+                <version>Edgware.RELEASE</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
