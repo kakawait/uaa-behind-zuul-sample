@@ -1,5 +1,7 @@
 # UAA (`AuthorizationServer`) load balanced behind API-GATEWAY (Edge service `Zuul`)
 
+[![Twitter Follow](https://img.shields.io/twitter/follow/thibaudlepretre.svg?style=social&label=%40thibaudlepretre)](https://twitter.com/intent/follow?screen_name=thibaudlepretre)
+
 ## Disclamer
 
 **This project is *Proof of concept* (aka `PoC`)** (and code quality is not perfect), please before using in production review security concerns among other things. (See https://github.com/kakawait/uaa-behind-zuul-sample/issues/6)
